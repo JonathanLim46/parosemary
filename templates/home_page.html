@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Title</title>
+
+
+    <script type="text/javascript" src="{{url_for('static', filename='paper-full.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='howler.core.js')}}"></script>
+    <link href= "{{ url_for('static',filename='style.css') }}" rel="stylesheet" type="text/css"/>
+    <script type="text/paperscript" canvas="myCanvas">
+
+        var stars = [];
+        var velocity = 2;
+        var generateRate = 150 
+        var newRandom;
+        
+        function randomInt(min,max)
+        {
+            return Math.floor(Math.random()*(max-min+1)+min);
+        }
+        
+        for(var i = 0; i <= 4000; i++) {
+            var star = new Path.Circle(new Point(view.size.width, view.size.height) * Point.random(), randomInt(0.5, 2))
+            stars.push(star)
+        }
+        
+        
+        for(var i = 0; i < stars.length; i++) {
+            var chance = Math.random()
+        
+            if(chance < 0.025) {
+                stars[i].fillColor = "#5bd6ff";
+            }
+        
+            else if(chance < 0.6) {
+                stars[i].fillColor = "white";
+            }
+        
+            else {
+                stars[i].fillColor = "#ffc849";
+            }
+        }
+        
+        
+        for(var i = 0; i < stars.length; i++) {
+            var assignedRate = Math.random() * velocity + 0.1
+            stars[i].rate = assignedRate;
+        }
+        
+        function onKeyDown(event) {
+        
+            if(event.key == 'd') {
+                velocity += 1
+                for(var i = 0; i < stars.length; i++) {
+                var assignedRate = Math.random() * velocity + 0.1
+                stars[i].rate = assignedRate;
+        
+                }
+            }
+        
+        
+            else if(event.key == 'a') {
+                velocity -= 1
+                for(var i = 0; i < stars.length; i++) {
+                var assignedRate = Math.random() * velocity + 0.1
+                stars[i].rate = assignedRate;
+                }
+            }
+        
+        }
+        
+        
+        function onFrame(event) {
+            for(var i = 0; i < stars.length; i++) {
+                stars[i].translate(stars[i].rate, 0)
+                if(stars[i].position.x > view.size.width) {
+                        stars[i].position.x = 0;
+            }
+        
+            else if(stars[i].position.x < 0) {
+                stars[i].position.x = view.size.width;
+            }
+        
+            
+            }
+            
+        }
+        
+    </script>   
+
+</head>
+
+<body>
+
+    <div class="canvas-container">
+        <canvas id="myCanvas" resize></canvas>
+    </div>
+    
+    <div class="container">
+        <script>
+
+            var tanggalTertentu = new Date(2023, 7, 14);
+
+            var tanggalSaatIni = new Date();
+
+            var selisihHari = Math.floor((tanggalSaatIni - tanggalTertentu) / (1000 * 60 * 60 * 24));
+
+            document.write('<p class="result">I miss you ' + tanggalTertentu.toLocaleDateString() + ': ' + selisihHari + ' days.</p>');
+        </script>
+    </div>
+
+    <audio controls>
+        <source src="{{ url_for('static', filename='music/lagujoji.mp3') }}" type="audio/mp3">
+        Your browser does not support the audio tag.
+    </audio>
+
+    <script>
+        var sound = new Howl({
+            src: ["{{ url_for('static', filename='music/lagujoji.mp3') }}"],
+            html5: true,
+            volume: 0.5, 
+            autoplay: true, 
+            loop: true 
+        });
+
+        
+    </script>
+
+</body>
+
+</html>
